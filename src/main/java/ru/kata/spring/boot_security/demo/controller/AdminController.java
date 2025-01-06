@@ -1,10 +1,10 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.dao.RoleRepository;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -15,11 +15,12 @@ import java.util.Set;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
-    private RoleRepository roleRepository;
+    public AdminController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public String showUsersTable(Model model) {
@@ -35,7 +36,7 @@ public class AdminController {
 
     @PostMapping("/new")
     public String saveUser(@ModelAttribute("user") User user, @RequestParam("roles") Set<Role> roles) {
-        userService.saveUser(userService.createUser(user, roles));
+        userService.saveUser(user, roles);
         return "redirect:/admin/";
     }
 

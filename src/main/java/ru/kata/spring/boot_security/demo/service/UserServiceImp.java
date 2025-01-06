@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.service;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
@@ -10,26 +11,22 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.UserRepository;
+import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
 public class UserServiceImp implements UserService, UserDetailsService {
 
-    private final UserRepository userRepository;
-
+    private final UserDao userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     @Lazy
-    public UserServiceImp(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImp(UserDao userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -50,17 +47,12 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public void saveUser(User user) {
-        userRepository.save(user);
-    }
-
-
-    @Override
-    @Transactional
-    public User createUser(User user, Set<Role> roles) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public void saveUser(User user, Set<Role> roles) {
+        if (user.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         user.setRoles(roles);
-        return user;
+        userRepository.save(user);
     }
 
     @Override

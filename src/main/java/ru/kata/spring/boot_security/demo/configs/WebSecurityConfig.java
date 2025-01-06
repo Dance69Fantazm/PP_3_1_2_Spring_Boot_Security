@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.configs;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +17,9 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final SuccessUserHandler successUserHandler;
-
     private final UserServiceImp userServiceImp;
 
+    @Autowired
     public WebSecurityConfig(SuccessUserHandler successUserHandler, UserServiceImp userServiceImp) {
         this.successUserHandler = successUserHandler;
         this.userServiceImp = userServiceImp;
